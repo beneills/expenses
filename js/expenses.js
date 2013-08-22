@@ -78,6 +78,36 @@ var tableAddRow = function(id, item, amount, period, calculated) {
 }
 
 
+var updateJSON = function(data) {
+    $("#json").val(JSON.stringify(data));
+}
+
+var loadFromJSONBox = function() {
+    loadFromJSON($("#json").val());
+}
+
+var loadFromJSON = function(json) {
+    clearAll();
+    data = JSON.parse(json);
+    lowest_id = 0;
+    for (var i = 0; i < data.length; i++) {
+	var item = data[i]
+	tableAddRow(lowest_id, item.item, item.amount, item.period, item.calculated);
+	if (item.id >= lowest_id){
+	    lowest_id = item.id + 1;
+	}
+    }
+    updateEverything(data);
+}
+
+var loadFromCookie = function() {
+    loadFromJSON($.cookie("data"));
+}
+
+var updateCookie = function(data) {
+    $.cookie("data", JSON.stringify(data), { expires: 365 * 10 });
+}
+
 var formNewItem = function(period) {
     var amount = parseFloat(document.getElementById('formAmount').value);
     if (isNaN(amount)){
@@ -91,13 +121,19 @@ var formNewItem = function(period) {
     }
 }
 
+var updateEverything = function(data) {
+    drawPie(pie, data);
+    drawBar(bar, data);
+    updateJSON(data);
+    updateCookie(data);
+}
+
 
 var addNewItem = function(item, amount, period) {
     var item = addData(data, item, amount, period);
     tableAddRow(lowest_id, item.item, item.amount, item.period, item.calculated);
     lowest_id = lowest_id + 1;
-    drawPie(pie, data);
-    drawBar(bar, data);
+    updateEverything(data);
     document.getElementById("newItem").reset();
 }
 
@@ -110,8 +146,7 @@ var tableDeleteRow = function(id) {
     }
     // Leave old pie up, until we get a piece of data
     if (data.length > 0){
-	drawPie(pie, data);
-	drawBar(bar, data);
+	updateEverything(data);
     }
 }
 
@@ -121,6 +156,8 @@ var clearAll = function() {
     data = [];
     lowest_id = 0;
     // Leave old pie up, until we get a piece of data
+    updateJSON(data);
+    $.removeCookie("data");
 }
 
 
@@ -141,9 +178,13 @@ var lowest_id = 0;
 pie = drawPie(pie, data);
 bar = drawBar(bar, data);
 
-// Add example data
-addNewItem('Food', 5, 'daily')
-addNewItem('Internet', 15, 'monthly')
-addNewItem('Phone', 30, 'monthly')
-addNewItem('Insurance', 400, 'yearly')
-
+if ($.cookie("data") != undefined) {
+    loadFromCookie();
+}
+else {
+    // Add example data
+    addNewItem('Food', 5, 'daily')
+    addNewItem('Internet', 15, 'monthly')
+    addNewItem('Phone', 30, 'monthly')
+    addNewItem('Insurance', 400, 'yearly')
+}

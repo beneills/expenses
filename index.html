@@ -17,6 +17,10 @@
         padding-bottom: 40px;
       }
 
+      #json {
+        width: 100%;
+        color: #888888;
+      }
       /* Custom container */
       .container-narrow {
         margin: 0 auto;
@@ -128,12 +132,18 @@
 
       <hr>
 
+      <h4>Copyable JSON</h4>
+      <textarea id="json" rows="6" onclick="this.focus();this.select()"></textarea>
+      <button class="btn btn-warning btn-small" style="float: right;" onclick="loadFromJSONBox()">
+	Load from JSON
+      </button>
     </div> <!-- /container -->
 
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/jquery.js"></script>
+    <script src="js/jquery.cookie.js"></script>
     <script src="js/bootstrap.js"></script>
     <script src="js/raphael-min.js"></script>
     <script src="js/g.raphael-min.js"></script>
