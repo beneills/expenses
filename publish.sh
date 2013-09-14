@@ -1,1 +1,4 @@
-s3cmd put --recursive * s3://www.beneills.com/expenses/
+[ -z "$EXPENSES_ROOT" ] && EXPENSES_ROOT=~/projects/expenses
+
+scp -r $EXPENSES_ROOT/* linode:/srv/expenses
+echo "Done."
