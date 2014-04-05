@@ -121,11 +121,20 @@ var formNewItem = function(period) {
     }
 }
 
+var updateTotal = function(data) {
+    var total = 0;
+    for (var i = 0; i < data.length; i++) {
+	total += data[i].calculated;
+    }
+    $('#total').html(total.toFixed(0));
+}
+
 var updateEverything = function(data) {
     drawPie(pie, data);
     drawBar(bar, data);
     updateJSON(data);
     updateCookie(data);
+    updateTotal(data);
 }
 
 
