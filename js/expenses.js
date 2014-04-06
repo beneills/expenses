@@ -92,7 +92,7 @@ var loadFromJSON = function(json) {
     lowest_id = 0;
     for (var i = 0; i < data.length; i++) {
 	var item = data[i]
-	tableAddRow(lowest_id, item.item, item.amount, item.period, item.calculated);
+	tableAddRow(item.id, item.item, item.amount, item.period, item.calculated);
 	if (item.id >= lowest_id){
 	    lowest_id = item.id + 1;
 	}
@@ -153,7 +153,7 @@ var updateEverything = function(data) {
 
 var addNewItem = function(item, amount, period) {
     var item = addData(data, item, amount, period);
-    tableAddRow(lowest_id, item.item, item.amount, item.period, item.calculated);
+    tableAddRow(item.id, item.item, item.amount, item.period, item.calculated);
     lowest_id = lowest_id + 1;
     updateEverything(data);
     document.getElementById("newItem").reset();
