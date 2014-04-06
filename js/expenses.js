@@ -74,7 +74,7 @@ var addData = function(data, item, amount, period) {
 
 var tableAddRow = function(id, item, amount, period, calculated) {
     var capitalized = period.charAt(0).toUpperCase() + period.slice(1);
-    $('#table > tbody > tr:first').after('<tr id="row_'+id+'"><td>'+item+'</td><td>£'+amount.toFixed(2)+'</td><td>'+capitalized+'</td><td>£'+calculated.toFixed(2)+'</td><td><button class="btn" onclick="tableDeleteRow('+id+')"><i class="icon-trash" /></button></td></tr>');
+    $('#table > tbody > tr:first').after('<tr id="row_'+id+'"><td>'+item+'</td><td>£'+amount.toFixed(2)+'</td><td>'+capitalized+'</td><td>£'+calculated.toFixed(2)+'</td><td class="percent"></td><td><button class="btn" onclick="tableDeleteRow('+id+')"><i class="icon-trash" /></button></td></tr>');
 }
 
 
@@ -121,12 +121,24 @@ var formNewItem = function(period) {
     }
 }
 
-var updateTotal = function(data) {
+var calculateTotal = function(data) {
     var total = 0;
     for (var i = 0; i < data.length; i++) {
 	total += data[i].calculated;
     }
-    $('#total').html(total.toFixed(0));
+    return total;
+}
+
+var updateTotal = function(data) {
+    $('#total').html(calculateTotal(data).toFixed(0));
+}
+
+var updatePercents = function(data) {
+    var total = calculateTotal(data);
+    for (var i = 0; i < data.length; i++) {
+	var percent = (data[i].calculated*100/total).toFixed(1);
+	$('tr#row_'+data[i].id+' .percent').html(percent + '%');
+    }
 }
 
 var updateEverything = function(data) {
@@ -135,6 +147,7 @@ var updateEverything = function(data) {
     updateJSON(data);
     updateCookie(data);
     updateTotal(data);
+    updatePercents(data);
 }
 
 
